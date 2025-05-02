@@ -1,48 +1,33 @@
-import React, { useEffect, useState } from "react";
-import Hero from "./components/Hero/Hero";
-import HomePage from "./pages/HomePage/HomePage";
-import Navbar from "./components/Navbar/Navbar";
-import StyledEngineProvider from "@mui/material/StyledEngineProvider";
-import { Outlet } from "react-router-dom";
-import {
-  fetchFilters,
-  fetchNewAlbums,
-  fetchSongs,
-  fetchTopAlbums,
-} from "./api/api";
+
+import './App.css'
+import Navbar from './components/Navbar';
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Hero from './components/Hero';
+import Albumpage from './pages/Albumpage';
 
 function App() {
-  const [data, setData] = useState({});
 
-  
-  const generateData = (key, source) => {
-    source().then((data) => {
-      setData((prevState) => {
-
-        return { ...prevState, [key]: data };
-      });
-    });
-  };
-
-  useEffect(() => {
-    generateData("topAlbums", fetchTopAlbums);
-    generateData("newAlbums", fetchNewAlbums);
-    generateData("songs", fetchSongs);
-    generateData("genres", fetchFilters);
-  }, []);
-
-  const { topAlbums = [], newAlbums = [], songs = [], genres = [] } = data;
+  const theme = createTheme({
+    palette: {
+      typography: {
+        fontFamily: "Poppins, sans-serif", // 👈 Important: no extra quotes!
+      },
+      primary: {
+        main: "#34C94B",
+      },
+      secondary: {
+        main: "#121212",
+      },
+    },
+  });
 
   return (
-    <>
-      <StyledEngineProvider injectFirst>
-        <Navbar searchData={[...topAlbums, ...newAlbums]} />
-        <Outlet context={{ data: { topAlbums, newAlbums, songs, genres } }} />
-      </StyledEngineProvider>
-    </>
-  );
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+    <Albumpage />
+    </ThemeProvider>
+  )
 }
 
-
-
-export default App;
+export default App
